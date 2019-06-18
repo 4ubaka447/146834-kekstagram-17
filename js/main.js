@@ -14,8 +14,6 @@ var randomUserImgTemplate = document.querySelector('#picture') // шаблон
   .content
   .querySelector('.picture'); // содержимое шаблона
 
-////////////////////////////////
-
 // произвольные комменты, моки
 var COMMENTS_LIST = [
   'Всё отлично!',
@@ -38,7 +36,7 @@ var AUTOR_NAME = [
   'Юра',
   'Андрей',
   'Женя'
-]
+];
 
 // начальное и конечное значение диапазона номеров аватарок в базе
 var AVATAR_COUNT = [1, 6];
@@ -58,7 +56,7 @@ var COMMENT = {
   avatarImage: AVATAR_COUNT,
   message: COMMENTS_LIST,
   autorName: AUTOR_NAME
-}
+};
 
 // шаблон описания, нужен чтобы передавать в функцию-генератор 1 объект, а не пачку глобальных переменных
 // под это дело бы создать класс. Но мы не делаем ООП, и надо читать как это делать в JS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -74,38 +72,38 @@ var PHOTO_DESCRIPTION = {
   likes: LIKES_COUNT,
   comments: COMMENT,
   commentCount: COMMENTS_COUNT
-}
+};
 
 // вспомогательная функция
 // возвращает случайный элемент из массива
 var getRandomArrElem = function (arr) {
-  var elem = arr[Math.round((Math.random() * (arr.length - 1)))]
+  var elem = arr[Math.round((Math.random() * (arr.length - 1)))];
   return elem;
-}
+};
 
 // вспомогательная функция
 // возвращает случайное число в заданном диапазоне
 var getRandomNumber = function (min, max) {
   return Math.round((Math.random() * (max - min)) + min);// даст вам неравномерное распределение, тут подойдет, а если надо равномерное?
-}
+};
 
 // возвращает случайное имя картинки аватара пользователя, и путь к ней
 var getAvatarName = function (startNumber, lastNumber) {
   var avatarName =
     'img/avatar-'
     + getRandomNumber(startNumber, lastNumber)
-    + '.svg'
+    + '.svg';
 
   return avatarName;
-}
+};
 
 // генератор одного коммента
 var getComment = function (comment) {
-  var comment = {
+  comment = {
     avatarImage: getAvatarName(comment.avatarImage[0], comment.avatarImage[1]),
     message: getRandomArrElem(comment.message),
     autorName: getRandomArrElem(comment.autorName)
-  }
+  };
 
   return comment;
 };
@@ -120,7 +118,7 @@ var getRandomComments = function (comment, min, max) {
   }
 
   return comments;
-}
+};
 
 // генерит заданное количество объектов - описаний к фото
 var getPhotoDescription = function (photoDescription) {
@@ -131,7 +129,7 @@ var getPhotoDescription = function (photoDescription) {
       url: 'photos/' + (i + 1) + '.jpg', // +1 нужен потому, что фото 0 нет, они идут как 1, 2, 3...
       likes: getRandomNumber(photoDescription.likes[0], photoDescription.likes[1]),
       comments: getRandomComments(photoDescription.comments, photoDescription.commentCount[0], photoDescription.commentCount[1])
-    }
+    };
   }
 
   return obj;
@@ -149,7 +147,7 @@ var renderRandomUserImg = function (photoDescription) {
   randomUserImg.querySelector('.picture__comments').textContent = photoDescription.comments.length;
 
   return randomUserImg;
-}
+};
 
 // функция вставки необходимого количества случайных фото в блок
 // photoDescriptions - массив случайных фото
@@ -163,7 +161,7 @@ var insertRandomUserImges = function (photoDescriptions, container) {
   }
 
   container.appendChild(fragment); // вставляем элемент на страницу
-}
+};
 
 // Реализация
 
