@@ -4,6 +4,18 @@
 // 2. Генерим массив комментов рандомной длины
 // 3. Генерим описание к фото с рандомным количеством комментов
 
+var imgFilters = document.querySelector('.img-filters'); // получаем доступ к блоку фильтров случайных фото
+imgFilters.classList.remove('img-filters--inactive'); // убираем модификатор inactive - начинаем показывать на странице
+
+var randomUserImgContainer = document.querySelector('.pictures'); // получаем блок для вставки случайных фото
+
+// получаем шаблон случайного фото
+var randomUserImgTemplate = document.querySelector('#picture') // шаблон
+  .content
+  .querySelector('.picture'); // содержимое шаблона
+
+////////////////////////////////
+
 // произвольные комменты, моки
 var COMMENTS_LIST = [
   'Всё отлично!',
@@ -116,7 +128,7 @@ var getPhotoDescription = function (photoDescription) {
 
   for (var i = 0; i < photoDescription.url; i++) {
     obj[i] = {
-      url: 'photos/' + i + '.jpg',
+      url: 'photos/' + (i + 1) + '.jpg', // +1 нужен потому, что фото 0 нет, они идут как 1, 2, 3...
       likes: getRandomNumber(photoDescription.likes[0], photoDescription.likes[1]),
       comments: getRandomComments(photoDescription.comments, photoDescription.commentCount[0], photoDescription.commentCount[1])
     }
@@ -125,4 +137,36 @@ var getPhotoDescription = function (photoDescription) {
   return obj;
 };
 
-// console.log(getPhotoDescription(PHOTO_DESCRIPTION));
+// Логика отрисовки
+
+// функция создания одного случайного фото
+// принимает один объект-описание
+var renderRandomUserImg = function (photoDescription) {
+  var randomUserImg = randomUserImgTemplate.cloneNode(true);
+
+  randomUserImg.querySelector('.picture__img').src = photoDescription.url;
+  randomUserImg.querySelector('.picture__likes').textContent = photoDescription.likes;
+  randomUserImg.querySelector('.picture__comments').textContent = photoDescription.comments.length;
+
+  return randomUserImg;
+}
+
+// функция вставки необходимого количества случайных фото в блок
+// photoDescriptions - массив случайных фото
+// container - блок для вставки фото
+var insertRandomUserImges = function (photoDescriptions, container) {
+  var fragment = document.createDocumentFragment(); // создаем конечный элемент для вставки
+
+  // заполняем элемент
+  for (var i = 0; i < photoDescriptions.length; i++) {
+    fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
+  }
+
+  container.appendChild(fragment); // вставляем элемент на страницу
+}
+
+// Реализация
+
+// создаем массив описаний
+var photoDescriptions = getPhotoDescription(PHOTO_DESCRIPTION);
+insertRandomUserImges(photoDescriptions, randomUserImgContainer);
