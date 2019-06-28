@@ -168,3 +168,72 @@ var insertRandomUserImges = function (photoDescriptions, container) {
 // создаем массив описаний
 var photoDescriptions = getPhotoDescription(PHOTO_DESCRIPTION);
 insertRandomUserImges(photoDescriptions, randomUserImgContainer);
+
+
+// module4-task1
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+var imgUpload = document.querySelector('.img-upload'); // все элементы для редактирования лежат здесь
+var imgUploadOverlay = imgUpload.querySelector('.img-upload__overlay');
+var uploadFile = imgUpload.querySelector('#upload-file');
+var uploadCancel = imgUpload.querySelector('#upload-cancel');
+
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+var closePopup = function () {
+  uploadFile.value = ''; // сбрасываем пусть и имя файла, если закрыли форму
+  imgUploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+
+};
+
+var openPopup = function () {
+  imgUploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+
+uploadFile.addEventListener('change', openPopup);
+
+uploadCancel.addEventListener('click', closePopup);
+
+uploadCancel.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 27) {
+    imgUploadOverlay.classList.add('hidden');
+  }
+});
+
+// реализация смены эффектов
+
+var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
+var effectsList = imgUpload.querySelector('.effects__list');
+
+
+var addElemntEffect = function (elemTarget, elemEffect) {
+  var defaultClass = elemTarget.classList.item(0);
+  elemTarget.classList = '';
+  elemTarget.classList.add(defaultClass);
+  elemTarget.classList.add(elemEffect.classList.item(1));
+};
+
+var delig = function (evt) {
+
+  var target = evt.target;
+
+  while (target !== effectsList) {
+    if (target.tagName === 'LI') {
+      addElemntEffect(imgUploadPreview, target.querySelector('span'));
+      break;
+    }
+    target = target.parentNode;
+  }
+};
+
+effectsList.addEventListener('click', delig);
