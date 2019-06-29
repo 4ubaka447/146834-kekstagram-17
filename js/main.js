@@ -173,7 +173,7 @@ insertRandomUserImges(photoDescriptions, randomUserImgContainer);
 // module4-task1
 
 var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
+// var ENTER_KEYCODE = 13;
 
 var imgUpload = document.querySelector('.img-upload'); // все элементы для редактирования лежат здесь
 var imgUploadOverlay = imgUpload.querySelector('.img-upload__overlay');
@@ -210,12 +210,15 @@ uploadCancel.addEventListener('keydown', function (evt) {
   }
 });
 
+
 // реализация смены эффектов
 
 var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
 var effectsList = imgUpload.querySelector('.effects__list');
 
-
+// функция добавляет целевому элементу класс с заданой стилизацией, копируя его из выбраного элемента элемента
+// elemTarget - целевой элемент
+// elemEffect - элемент содержащий нужный класс
 var addElemntEffect = function (elemTarget, elemEffect) {
   var defaultClass = elemTarget.classList.item(0);
   elemTarget.classList = '';
@@ -223,8 +226,9 @@ var addElemntEffect = function (elemTarget, elemEffect) {
   elemTarget.classList.add(elemEffect.classList.item(1));
 };
 
-var delig = function (evt) {
-
+// функция обработчик
+// использует делегирование событий, срабатывает по клику на елементе списка
+var onEffectsItemClick = function (evt) {
   var target = evt.target;
 
   while (target !== effectsList) {
@@ -236,4 +240,103 @@ var delig = function (evt) {
   }
 };
 
-effectsList.addEventListener('click', delig);
+effectsList.addEventListener('click', onEffectsItemClick);
+
+
+// реализация насыщенности эффекта
+
+var effectLevel = imgUpload.querySelector('.effect-level');
+var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
+var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
+// var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+
+effectLevelPin.style.left = 100 + '%';
+effectLevelDepth.style.width = 100 + '%';
+
+
+// effectLevelPin.addEventListener('mousedown', function (evt) {
+
+//   var startX = evt.clientX;
+
+//   var onMouseMove = function (moveEvt) {
+
+//     var shift = startX - moveEvt.clientX;
+//     // startX = moveEvt.clientX;
+
+//     var sliderPosition = (effectLevelPin.offsetLeft - shift) / 453 * 100;
+//     console.log(sliderPosition);
+
+//     if (sliderPosition < 0) {
+//       sliderPosition = 0;
+//     }
+
+//     if (sliderPosition > 100) {
+//       sliderPosition = 100;
+//     }
+
+//     effectLevelPin.style.left = sliderPosition + '%';
+//   };
+
+//   var onMouseUp = function () {
+//     document.removeEventListener('mousemove', onMouseMove);
+//     document.removeEventListener('mouseup', onMouseUp);
+//   };
+
+//   document.addEventListener('mousemove', onMouseMove);
+//   document.addEventListener('mouseup', onMouseUp);
+// });
+
+
+// реализация масштабирования
+
+var SCALE_VALUE_DEFAULT = 1; // масштаб по умолчанию
+var SCALE_STEP = 0.25; // шаг масштабирования в частях от единицы
+var LIMIT_SCALE_VALUES = [0.25, 1]; // границы значения масштаба
+
+var scaleControlSmaller = imgUpload.querySelector('.scale__control--smaller');
+var scaleControlBigger = imgUpload.querySelector('.scale__control--bigger');
+var scaleControlValue = imgUpload.querySelector('.scale__control--value');
+var scale = imgUpload.querySelector('.scale');
+
+// функция устанавливает значение масштаба
+var setScaleControlValue = function (value) {
+  scaleControlValue.value = value * 100 + '%';
+  imgUploadPreview.style.transform = 'scale(' + value + ')';
+};
+
+setScaleControlValue(SCALE_VALUE_DEFAULT); // устанавливаем значение масштаба по умолчанию
+
+// функция увеличивает масштаб изображения
+var scaleUp = function (scaleValue, scaleStep, limitScaleValues) {
+  if (scaleValue !== limitScaleValues[1]) {
+    scaleValue = scaleValue + scaleStep;
+  }
+
+  return scaleValue;
+};
+
+// функция уменьшает масштаб изображения
+var scaleDown = function (scaleValue, scaleStep, limitScaleValues) {
+  if (scaleValue !== limitScaleValues[0]) {
+    scaleValue = scaleValue - scaleStep;
+  }
+
+  return scaleValue;
+};
+
+// использует глобальные переменные, по возможности надо переписать
+var onScaleControlClick = function (evt) {
+  var target = evt.target;
+
+  if (target === scaleControlSmaller) {
+    SCALE_VALUE_DEFAULT = scaleDown(SCALE_VALUE_DEFAULT, SCALE_STEP, LIMIT_SCALE_VALUES);
+
+  }
+  if (target === scaleControlBigger) {
+    SCALE_VALUE_DEFAULT = scaleUp(SCALE_VALUE_DEFAULT, SCALE_STEP, LIMIT_SCALE_VALUES);
+  }
+
+  setScaleControlValue(SCALE_VALUE_DEFAULT);
+};
+
+scale.addEventListener('click', onScaleControlClick);
