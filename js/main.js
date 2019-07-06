@@ -181,10 +181,12 @@ var imgUploadForm = imgUpload.querySelector('.img-upload__form');
 var imgUploadOverlay = imgUpload.querySelector('.img-upload__overlay');
 var uploadFile = imgUpload.querySelector('#upload-file');
 var uploadCancel = imgUpload.querySelector('#upload-cancel');
+var textDescription = imgUpload.querySelector('.text__description');
 
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  // сработает при нажатии ESC и если фокус не находится в поле ввода комментария
+  if (evt.keyCode === ESC_KEYCODE && textDescription !== document.activeElement) {
     closePopup();
   }
 };
