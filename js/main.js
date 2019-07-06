@@ -173,9 +173,11 @@ insertRandomUserImges(photoDescriptions, randomUserImgContainer);
 // module4-task1
 
 var ESC_KEYCODE = 27;
-// var ENTER_KEYCODE = 13;
+var UPLOADED_IMG_DEFAULT_CLASS = 'img-upload__preview';
+var DEFAULT_EFFECT_LEVEL = 100;
 
 var imgUpload = document.querySelector('.img-upload'); // все элементы для редактирования лежат здесь
+var imgUploadForm = imgUpload.querySelector('.img-upload__form');
 var imgUploadOverlay = imgUpload.querySelector('.img-upload__overlay');
 var uploadFile = imgUpload.querySelector('#upload-file');
 var uploadCancel = imgUpload.querySelector('#upload-cancel');
@@ -188,10 +190,9 @@ var onPopupEscPress = function (evt) {
 };
 
 var closePopup = function () {
-  uploadFile.value = ''; // сбрасываем пусть и имя файла, если закрыли форму
+  imgUploadForm.reset(); // сбрасываем форму при закрытиии
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
-
 };
 
 var openPopup = function () {
@@ -201,46 +202,7 @@ var openPopup = function () {
 
 
 uploadFile.addEventListener('change', openPopup);
-
 uploadCancel.addEventListener('click', closePopup);
-
-uploadCancel.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === 27) {
-    imgUploadOverlay.classList.add('hidden');
-  }
-});
-
-
-// реализация смены эффектов
-
-var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
-var effectsList = imgUpload.querySelector('.effects__list');
-
-// функция добавляет целевому элементу класс с заданой стилизацией, копируя его из выбраного элемента элемента
-// elemTarget - целевой элемент
-// elemEffect - элемент содержащий нужный класс
-var addElemntEffect = function (elemTarget, elemEffect) {
-  var defaultClass = elemTarget.classList.item(0);
-  elemTarget.classList = '';
-  elemTarget.classList.add(defaultClass);
-  elemTarget.classList.add(elemEffect.classList.item(1));
-};
-
-// функция обработчик
-// использует делегирование событий, срабатывает по клику на елементе списка
-var onEffectsItemClick = function (evt) {
-  var target = evt.target;
-
-  while (target !== effectsList) {
-    if (target.tagName === 'LI') {
-      addElemntEffect(imgUploadPreview, target.querySelector('span'));
-      break;
-    }
-    target = target.parentNode;
-  }
-};
-
-effectsList.addEventListener('click', onEffectsItemClick);
 
 
 // реализация насыщенности эффекта
@@ -248,50 +210,86 @@ effectsList.addEventListener('click', onEffectsItemClick);
 var effectLevel = imgUpload.querySelector('.effect-level');
 var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
 var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
+var effectLevelLine = effectLevel.querySelector('.effect-level__line');
 // var effectLevelValue = effectLevel.querySelector('.effect-level__value');
 
-effectLevelPin.style.left = 100 + '%';
-effectLevelDepth.style.width = 100 + '%';
+// функция сброса уровня эффекта, на уровень по умолчанию
+var resetEffectLevel = function (defaultEffectLevel) {
+  effectLevelPin.style.left = defaultEffectLevel + '%';
+  effectLevelDepth.style.width = defaultEffectLevel + '%';
+};
+
+resetEffectLevel(DEFAULT_EFFECT_LEVEL);
 
 
-// effectLevelPin.addEventListener('mousedown', function (evt) {
+effectLevelPin.addEventListener('mousedown', function (evt) {
+  // все перемещения слайдера будем считать в процентах,
+  // для этого найдем масштбаный коэффициент
+  // получим ширину слайдера и соотнесем ее к 100%
+  var scaleFactor = effectLevelLine.offsetWidth / 100; // получаем ширину
+  var startX = evt.clientX;
+  var onMouseMove = function (moveEvt) {
 
-//   var startX = evt.clientX;
+    var shift = (startX - moveEvt.clientX);
+    startX = moveEvt.clientX;
+    var currentPosition = effectLevelPin.offsetLeft;
+    var sliderPosition = (currentPosition - shift) / scaleFactor;
 
-//   var onMouseMove = function (moveEvt) {
+    if (sliderPosition < 0) {
+      sliderPosition = 0;
+    }
 
-//     var shift = startX - moveEvt.clientX;
-//     // startX = moveEvt.clientX;
+    if (sliderPosition > 100) {
+      sliderPosition = 100;
+    }
 
-//     var sliderPosition = (effectLevelPin.offsetLeft - shift) / 453 * 100;
-//     console.log(sliderPosition);
+    effectLevelPin.style.left = sliderPosition + '%';
+    effectLevelDepth.style.width = sliderPosition + '%';
+  };
 
-//     if (sliderPosition < 0) {
-//       sliderPosition = 0;
-//     }
+  var onMouseUp = function () {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
 
-//     if (sliderPosition > 100) {
-//       sliderPosition = 100;
-//     }
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
 
-//     effectLevelPin.style.left = sliderPosition + '%';
-//   };
+// реализация смены эффектов
 
-//   var onMouseUp = function () {
-//     document.removeEventListener('mousemove', onMouseMove);
-//     document.removeEventListener('mouseup', onMouseUp);
-//   };
+var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
+var effectsList = imgUpload.querySelector('.effects__list');
 
-//   document.addEventListener('mousemove', onMouseMove);
-//   document.addEventListener('mouseup', onMouseUp);
-// });
+// функция добавляет целевому элементу задаваемый класс
+// elemTarget - целевой элемент
+// extraClass - задаваемый класс
+var addElemntEffect = function (elemTarget, extraClass) { // сюда строку
+  elemTarget.classList = ''; // обнуляем класс лист
+  elemTarget.classList.add(UPLOADED_IMG_DEFAULT_CLASS); // добавляем класс по умолчанию
+  elemTarget.classList.add(extraClass); // добавляем заданный класс
+};
+
+// функция обработчик
+var onEffectsItemClick = function (evt) {
+
+  if (evt.target.classList.contains('effects__preview')) {
+    var extraClass = evt.target.classList.item(1); // забираем нужный класс у элемента по которому кликаем
+    addElemntEffect(imgUploadPreview, extraClass);
+    resetEffectLevel(DEFAULT_EFFECT_LEVEL);
+  }
+};
+
+effectsList.addEventListener('click', onEffectsItemClick);
 
 
 // реализация масштабирования
 
-var SCALE_VALUE_DEFAULT = 1; // масштаб по умолчанию
-var SCALE_STEP = 0.25; // шаг масштабирования в частях от единицы
-var LIMIT_SCALE_VALUES = [0.25, 1]; // границы значения масштаба
+var SCALE = {
+  SCALE_VALUE_DEFAULT: 1,
+  SCALE_STEP: 0.25,
+  LIMIT_SCALE_VALUES: [0.25, 1]
+};
 
 var scaleControlSmaller = imgUpload.querySelector('.scale__control--smaller');
 var scaleControlBigger = imgUpload.querySelector('.scale__control--bigger');
@@ -304,7 +302,7 @@ var setScaleControlValue = function (value) {
   imgUploadPreview.style.transform = 'scale(' + value + ')';
 };
 
-setScaleControlValue(SCALE_VALUE_DEFAULT); // устанавливаем значение масштаба по умолчанию
+setScaleControlValue(SCALE.SCALE_VALUE_DEFAULT); // устанавливаем значение масштаба по умолчанию
 
 // функция увеличивает масштаб изображения
 var scaleUp = function (scaleValue, scaleStep, limitScaleValues) {
@@ -329,14 +327,16 @@ var onScaleControlClick = function (evt) {
   var target = evt.target;
 
   if (target === scaleControlSmaller) {
-    SCALE_VALUE_DEFAULT = scaleDown(SCALE_VALUE_DEFAULT, SCALE_STEP, LIMIT_SCALE_VALUES);
+    SCALE.SCALE_VALUE_DEFAULT =
+      scaleDown(SCALE.SCALE_VALUE_DEFAULT, SCALE.SCALE_STEP, SCALE.LIMIT_SCALE_VALUES);
 
   }
   if (target === scaleControlBigger) {
-    SCALE_VALUE_DEFAULT = scaleUp(SCALE_VALUE_DEFAULT, SCALE_STEP, LIMIT_SCALE_VALUES);
+    SCALE.SCALE_VALUE_DEFAULT =
+      scaleUp(SCALE.SCALE_VALUE_DEFAULT, SCALE.SCALE_STEP, SCALE.LIMIT_SCALE_VALUES);
   }
 
-  setScaleControlValue(SCALE_VALUE_DEFAULT);
+  setScaleControlValue(SCALE.SCALE_VALUE_DEFAULT);
 };
 
 scale.addEventListener('click', onScaleControlClick);
