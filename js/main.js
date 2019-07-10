@@ -326,19 +326,19 @@ effectsList.addEventListener('click', onEffectsItemClick);
 var changeEffectLevel = function (depthOfEffect, effectOnImg, targetElement) {
   switch (effectOnImg) {
     case 'effects__preview--chrome':
-      targetElement.style.filter = 'grayscale(+' + 0.01 * depthOfEffect + ')';
+      targetElement.style.filter = 'grayscale(+' + 0.01 * depthOfEffect + ')'; // 0...1
       break;
     case 'effects__preview--sepia':
-      targetElement.style.filter = 'sepia(+' + 0.01 * depthOfEffect + ')';
+      targetElement.style.filter = 'sepia(+' + 0.01 * depthOfEffect + ')'; // 0...1
       break;
     case 'effects__preview--marvin':
-      targetElement.style.filter = 'invert(' + depthOfEffect + '%)';
+      targetElement.style.filter = 'invert(' + depthOfEffect + '%)'; // 0...100
       break;
     case 'effects__preview--phobos':
-      targetElement.style.filter = 'blur(+' + 3 / 100 * depthOfEffect + 'px)';
+      targetElement.style.filter = 'blur(+' + 3 / 100 * depthOfEffect + 'px)'; // 0...3
       break;
     case 'effects__preview--heat':
-      targetElement.style.filter = 'brightness(+' + ((depthOfEffect * 0.01 * (3 - 1)) + 1) + ')';
+      targetElement.style.filter = 'brightness(+' + ((depthOfEffect * 0.01 * (3 - 1)) + 1) + ')'; // 1...3
       break;
   }
 };
