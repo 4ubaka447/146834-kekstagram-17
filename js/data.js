@@ -4,7 +4,7 @@
 // 2. Генерим массив комментов рандомной длины
 // 3. Генерим описание к фото с рандомным количеством комментов
 
-window.data = (function () {
+(function () {
 
   // произвольные комменты, моки
   var COMMENTS_LIST = [
@@ -17,7 +17,7 @@ window.data = (function () {
   ];
 
   // произвольные имена авторов комментов, моки
-  var AUTOR_NAME = [
+  var AUTHORS_NAMES = [
     'Артем',
     'Юля',
     'Данил',
@@ -31,51 +31,52 @@ window.data = (function () {
   ];
 
   // начальное и конечное значение диапазона номеров аватарок в базе
-  var AVATAR_COUNT = [1, 6];
+  var avatarCount = {
+    MIN: 1,
+    MAX: 6,
+  };
 
   // количество описаний фото для генерации
   var PHOTO_DESCRIPTION_COUNT = 25;
 
   // возможное количество комментов к одной фото, начальное и конечное значение диапазона
-  var COMMENTS_COUNT = [1, 5];
-
-  // возможное количество лайков к одной фото, начальное и конечное значение диапазона
-  var LIKES_COUNT = [15, 200];
-
-  // шаблон коммента, нужен чтобы передавать в функцию-генератор 1 объект, а не пачку глобальных переменных
-  // под это дело бы создать класс. Но мы не делаем ООП, и надо читать как это делать в JS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  var COMMENT = {
-    avatarImage: AVATAR_COUNT,
-    message: COMMENTS_LIST,
-    autorName: AUTOR_NAME
+  var numberOfComments = {
+    MIN: 1,
+    MAX: 5,
   };
 
-  var PHOTO_DESCRIPTION = {
+  // возможное количество лайков к одной фото, начальное и конечное значение диапазона
+  var likesCount = {
+    MIN: 15,
+    MAX: 200,
+  };
+
+  // шаблон коммента, нужен чтобы передавать в функцию-генератор 1 объект, а не пачку глобальных переменных
+  var commentTemplate = {
+    avatarImage: avatarCount,
+    message: COMMENTS_LIST,
+    autorName: AUTHORS_NAMES
+  };
+
+  var photoDescription = {
     url: PHOTO_DESCRIPTION_COUNT,
-    likes: LIKES_COUNT,
-    comments: COMMENT,
-    commentCount: COMMENTS_COUNT
+    likes: likesCount,
+    comments: commentTemplate,
+    commentCount: numberOfComments,
   };
 
   // возвращает случайное имя картинки аватара пользователя, и путь к ней
   var getAvatarName = function (startNumber, lastNumber) {
-    var avatarName =
-      'img/avatar-'
-      + window.util.getRandomNumber(startNumber, lastNumber)
-      + '.svg';
-
-    return avatarName;
+    return 'img/avatar-' + window.util.getRandomNumber(startNumber, lastNumber) + '.svg';
   };
 
   // генератор одного коммента
   var getComment = function (comment) {
-    comment = {
-      avatarImage: getAvatarName(comment.avatarImage[0], comment.avatarImage[1]),
+    return {
+      avatarImage: getAvatarName(comment.avatarImage.MIN, comment.avatarImage.MAX),
       message: window.util.getRandomArrElem(comment.message),
       autorName: window.util.getRandomArrElem(comment.autorName)
     };
-
-    return comment;
   };
 
   // множитель комментов
@@ -91,19 +92,22 @@ window.data = (function () {
   };
 
   // генерит заданное количество объектов - описаний к фото
-  var getPhotoDescription = function (photoDescription) {
+  var getPhotoDescription = function (photoCaptions) {
     var obj = [];
 
-    for (var i = 0; i < photoDescription.url; i++) {
+    for (var i = 0; i < photoCaptions.url; i++) {
       obj[i] = {
         url: 'photos/' + (i + 1) + '.jpg', // +1 нужен потому, что фото 0 нет, они идут как 1, 2, 3...
-        likes: window.util.getRandomNumber(photoDescription.likes[0], photoDescription.likes[1]),
-        comments: getRandomComments(photoDescription.comments, photoDescription.commentCount[0], photoDescription.commentCount[1])
+        likes: window.util.getRandomNumber(photoCaptions.likes.MIN, photoCaptions.likes.MAX),
+        comments: getRandomComments(photoCaptions.comments, photoCaptions.commentCount.MIN, photoCaptions.commentCount.MAX),
       };
     }
 
     return obj;
   };
 
-  return getPhotoDescription(PHOTO_DESCRIPTION);
+  window.data = {
+    photoDescription: getPhotoDescription(photoDescription),
+  };
+
 })();

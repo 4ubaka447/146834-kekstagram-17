@@ -1,18 +1,15 @@
 'use strict';
 
-// не знаю куда приткнуть эту штуку, используется много где, и в разных модулях
-window.imgUpload = document.querySelector('.img-upload'); // все элементы для редактирования лежат здесь
-
-window.util = (function () {
+(function () {
 
   var ESC_KEYCODE = 27;
 
-  var textDescription = window.imgUpload.querySelector('.text__description');
-  return {
+  var textDescription = document.querySelector('.text__description');
+
+  window.util = {
     // возвращает случайный элемент из массива
     getRandomArrElem: function (arr) {
-      var elem = arr[Math.round((Math.random() * (arr.length - 1)))];
-      return elem;
+      return arr[Math.round((Math.random() * (arr.length - 1)))];
     },
     // возвращает случайное число в заданном диапазоне
     getRandomNumber: function (min, max) {

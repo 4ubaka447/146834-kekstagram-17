@@ -4,11 +4,11 @@
   var UPLOADED_IMG_DEFAULT_CLASS = 'img-upload__preview';
   var DEFAULT_EFFECT_LEVEL = 100;
 
-
-  var imgUploadForm = window.imgUpload.querySelector('.img-upload__form');
-  var imgUploadOverlay = window.imgUpload.querySelector('.img-upload__overlay');
-  var uploadFile = window.imgUpload.querySelector('#upload-file');
-  var uploadCancel = window.imgUpload.querySelector('#upload-cancel');
+  var imgUpload = document.querySelector('.img-upload'); // все элементы для редактирования лежат здесь
+  var imgUploadForm = imgUpload.querySelector('.img-upload__form');
+  var imgUploadOverlay = imgUpload.querySelector('.img-upload__overlay');
+  var uploadFile = imgUpload.querySelector('#upload-file');
+  var uploadCancel = imgUpload.querySelector('#upload-cancel');
 
   var onPopupEscPress = function (evt) {
     window.util.isEscEvent(evt, closePopup);
@@ -18,6 +18,7 @@
     imgUploadForm.reset(); // сбрасываем форму при закрытиии
     imgUploadOverlay.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
+    document.removeEventListener('change', onPopupEscPress);
   };
 
   var openPopup = function () {
@@ -38,13 +39,13 @@
     LIMIT_SCALE_VALUES: [0.25, 1]
   };
 
-  var scaleControlSmaller = window.imgUpload.querySelector('.scale__control--smaller');
-  var scaleControlBigger = window.imgUpload.querySelector('.scale__control--bigger');
-  var scaleControlValue = window.imgUpload.querySelector('.scale__control--value');
-  var scale = window.imgUpload.querySelector('.scale');
+  var scaleControlSmaller = imgUpload.querySelector('.scale__control--smaller');
+  var scaleControlBigger = imgUpload.querySelector('.scale__control--bigger');
+  var scaleControlValue = imgUpload.querySelector('.scale__control--value');
+  var scale = imgUpload.querySelector('.scale');
 
-  var imgUploadPreview = window.imgUpload.querySelector('.img-upload__preview');
-  var effectsList = window.imgUpload.querySelector('.effects__list');
+  var imgUploadPreview = imgUpload.querySelector('.img-upload__preview');
+  var effectsList = imgUpload.querySelector('.effects__list');
 
   // функция устанавливает значение масштаба
   var setScaleControlValue = function (value) {
@@ -94,7 +95,7 @@
 
   // реализация смены эффектов
 
-  var effectLevel = window.imgUpload.querySelector('.effect-level');
+  var effectLevel = document.querySelector('.effect-level');
   var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
   var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
   var effectLevelLine = effectLevel.querySelector('.effect-level__line');

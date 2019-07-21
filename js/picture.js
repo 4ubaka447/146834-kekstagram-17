@@ -2,7 +2,7 @@
 
 // Логика отрисовки
 
-window.picture = (function () {
+(function () {
   var imgFilters = document.querySelector('.img-filters'); // получаем доступ к блоку фильтров случайных фото
   imgFilters.classList.remove('img-filters--inactive'); // убираем модификатор inactive - начинаем показывать на странице
 
@@ -26,17 +26,16 @@ window.picture = (function () {
   // функция вставки необходимого количества случайных фото в блок
   // photoDescriptions - массив случайных фото
   // container - блок для вставки фото
-  return {
-    insertRandomUserImges: function (photoDescriptions, container) {
-      var fragment = document.createDocumentFragment(); // создаем конечный элемент для вставки
 
-      // заполняем элемент
-      for (var i = 0; i < photoDescriptions.length; i++) {
-        fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
-      }
+  window.picture.insertRandomUserImges = function (photoDescriptions, container) {
+    var fragment = document.createDocumentFragment(); // создаем конечный элемент для вставки
 
-      container.appendChild(fragment); // вставляем элемент на страницу
-    },
+    // заполняем элемент
+    for (var i = 0; i < photoDescriptions.length; i++) {
+      fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
+    }
+
+    container.appendChild(fragment); // вставляем элемент на страницу
   };
 
 })();
