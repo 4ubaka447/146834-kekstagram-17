@@ -27,15 +27,17 @@
   // photoDescriptions - массив случайных фото
   // container - блок для вставки фото
 
-  window.picture.insertRandomUserImges = function (photoDescriptions, container) {
-    var fragment = document.createDocumentFragment(); // создаем конечный элемент для вставки
+  window.picture = {
+    insertRandomUserImges: function (photoDescriptions, container) {
+      var fragment = document.createDocumentFragment(); // создаем конечный элемент для вставки
 
-    // заполняем элемент
-    for (var i = 0; i < photoDescriptions.length; i++) {
-      fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
-    }
+      // заполняем элемент
+      for (var i = 0; i < photoDescriptions.length; i++) {
+        fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
+      }
 
-    container.appendChild(fragment); // вставляем элемент на страницу
+      container.appendChild(fragment); // вставляем элемент на страницу
+    },
   };
 
 })();
