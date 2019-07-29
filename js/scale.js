@@ -3,10 +3,10 @@
 // реализация масштабирования
 (function () {
 
-  var SCALE = {
-    SCALE_VALUE_DEFAULT: 1,
-    SCALE_STEP: 0.25,
-    LIMIT_SCALE_VALUES: [0.25, 1]
+  var Scale = {
+    VALUE_DEFAULT: 1,
+    STEP: 0.25,
+    LIMIT_VALUES: [0.25, 1]
   };
 
   var imgUpload = document.querySelector('.img-upload'); // все элементы для редактирования лежат здесь
@@ -22,7 +22,7 @@
     imgUploadPreview.style.transform = 'scale(' + value + ')';
   };
 
-  setScaleControlValue(SCALE.SCALE_VALUE_DEFAULT); // устанавливаем значение масштаба по умолчанию
+  setScaleControlValue(Scale.VALUE_DEFAULT); // устанавливаем значение масштаба по умолчанию
 
   // функция увеличивает масштаб изображения
   var scaleUp = function (scaleValue, scaleStep, limitScaleValues) {
@@ -47,17 +47,17 @@
       var target = evt.target;
 
       if (target === scaleControlSmaller) {
-        SCALE.SCALE_VALUE_DEFAULT =
-          scaleDown(SCALE.SCALE_VALUE_DEFAULT, SCALE.SCALE_STEP, SCALE.LIMIT_SCALE_VALUES);
+        Scale.VALUE_DEFAULT =
+          scaleDown(Scale.VALUE_DEFAULT, Scale.STEP, Scale.LIMIT_VALUES);
 
       }
 
       if (target === scaleControlBigger) {
-        SCALE.SCALE_VALUE_DEFAULT =
-          scaleUp(SCALE.SCALE_VALUE_DEFAULT, SCALE.SCALE_STEP, SCALE.LIMIT_SCALE_VALUES);
+        Scale.VALUE_DEFAULT =
+          scaleUp(Scale.VALUE_DEFAULT, Scale.STEP, Scale.LIMIT_VALUES);
       }
 
-      setScaleControlValue(SCALE.SCALE_VALUE_DEFAULT);
+      setScaleControlValue(Scale.VALUE_DEFAULT);
     },
   };
 
