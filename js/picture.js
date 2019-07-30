@@ -48,7 +48,7 @@
       }
     }
 
-    window.render(newArrayOfPictures, newArrayOfPictures.length)
+    window.render(newArrayOfPictures, newArrayOfPictures.length);
   };
 
   // сортировка по обсуждаемым фото
