@@ -23,30 +23,29 @@
     return randomUserImg;
   };
 
-  // функция вставляет необходимое количество случайных фото в блок
-  // photoDescriptions - массив случайных фото
-  // quantity - количество фото для отрисовки
-  window.render = {
-    draw: function (photoDescriptions, quantity) {
-
-      var fragment = document.createDocumentFragment();
-
-      // цикл пробегает весь массив, при необходимости длину можно уменьшить
-      for (var i = 0; i < quantity; i++) {
-        fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
-      }
-
-      randomUserImgContainer.appendChild(fragment);
-    },
-
-    clear: function () {
-      while (randomUserImgContainer.querySelector('.picture')) {
-        randomUserImgContainer
-          .removeChild(randomUserImgContainer.querySelector('.picture'));
-      }
+  var clear = function () {
+    while (randomUserImgContainer.querySelector('.picture')) {
+      randomUserImgContainer
+        .removeChild(randomUserImgContainer.querySelector('.picture'));
     }
   };
 
+  // функция вставляет необходимое количество случайных фото в блок
+  // photoDescriptions - массив случайных фото
+  // quantity - количество фото для отрисовки
+  window.render = function (photoDescriptions, quantity) {
+
+    clear();
+
+    var fragment = document.createDocumentFragment();
+
+    // цикл пробегает весь массив, при необходимости длину можно уменьшить
+    for (var i = 0; i < quantity; i++) {
+      fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
+    }
+
+    randomUserImgContainer.appendChild(fragment);
+  };
 
 })();
 

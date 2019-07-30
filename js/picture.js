@@ -16,25 +16,24 @@
 
   var pictures = [];
 
-  // функция подсвечивает кнопку и чистит поле для рендеринга
+  // функция подсвечивает кнопку
   var activeFiltersButton = function (elem) {
     imgFiltersButton.forEach(function (it) {
       it.classList.remove('img-filters__button--active');
     });
 
     elem.classList.add('img-filters__button--active');
-
-    window.render.clear();
   };
 
-  var onFilterPopularClick = function () {
-    activeFiltersButton(filterPopular);
-    window.render.draw(pictures, pictures.length);
+  // сортировка по популярности
+  // отрисовывает наиболее популярные фото
+  // в данном случае отрисовывает в первоначальном порядке
+  var sortPopular = function () {
+    window.render(pictures, pictures.length);
   };
 
-  var onFilterNewClick = function () {
-    activeFiltersButton(filterNew);
-
+  // сортировка по новым фото
+  var sortNew = function () {
     var newArrayOfPictures = [];
 
     for (var i = 0; newArrayOfPictures.length < NEW_ELEMENTS_COUNT; i++) {
@@ -48,13 +47,13 @@
         newArrayOfPictures.push(elem);
       }
     }
-    window.render.draw(newArrayOfPictures, newArrayOfPictures.length);
+
+    window.render(newArrayOfPictures, newArrayOfPictures.length)
   };
 
-  var onFilterDiscussedClick = function () {
-    activeFiltersButton(filterDiscussed);
-
-    window.render.draw(
+  // сортировка по обсуждаемым фото
+  var sortDiscussed = function () {
+    window.render(
         pictures
           .slice()
           .sort(function (a, b) {
@@ -65,9 +64,24 @@
         pictures.length);
   };
 
+  var onFilterPopularClick = function () {
+    activeFiltersButton(filterPopular);
+    window.debounce(sortPopular);
+  };
+
+  var onFilterNewClick = function () {
+    activeFiltersButton(filterNew);
+    window.debounce(sortNew);
+  };
+
+  var onFilterDiscussedClick = function () {
+    activeFiltersButton(filterDiscussed);
+    window.debounce(sortDiscussed);
+  };
+
   var successHandler = function (data) {
     pictures = data;
-    window.render.draw(pictures, pictures.length);
+    window.render(pictures, pictures.length);
     imgFilters.classList.remove('img-filters--inactive'); // убираем модификатор inactive - начинаем показывать на странице
 
     filterPopular.addEventListener('click', onFilterPopularClick);
