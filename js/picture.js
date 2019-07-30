@@ -87,6 +87,8 @@
     filterPopular.addEventListener('click', onFilterPopularClick);
     filterNew.addEventListener('click', onFilterNewClick);
     filterDiscussed.addEventListener('click', onFilterDiscussedClick);
+
+    window.preview(pictures);
   };
 
   // вызывает функцию вставки, но с моками
@@ -94,10 +96,7 @@
     successHandler(stub);
   };
 
-  window.picture = function () {
-    window.load(successHandler, errorHandler);
-  };
-
+  window.load(successHandler, errorHandler);
 })();
 
 
