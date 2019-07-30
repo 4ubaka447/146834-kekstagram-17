@@ -31,7 +31,7 @@
   ];
 
   // начальное и конечное значение диапазона номеров аватарок в базе
-  var avatarCount = {
+  var AvatarCount = {
     MIN: 1,
     MAX: 6,
   };
@@ -40,29 +40,29 @@
   var PHOTO_DESCRIPTION_COUNT = 25;
 
   // возможное количество комментов к одной фото, начальное и конечное значение диапазона
-  var numberOfComments = {
+  var NumberOfComments = {
     MIN: 1,
     MAX: 5,
   };
 
   // возможное количество лайков к одной фото, начальное и конечное значение диапазона
-  var likesCount = {
+  var LikesCount = {
     MIN: 15,
     MAX: 200,
   };
 
   // шаблон коммента, нужен чтобы передавать в функцию-генератор 1 объект, а не пачку глобальных переменных
   var commentTemplate = {
-    avatarImage: avatarCount,
+    avatarImage: AvatarCount,
     message: COMMENTS_LIST,
     autorName: AUTHORS_NAMES
   };
 
   var photoDescription = {
     url: PHOTO_DESCRIPTION_COUNT,
-    likes: likesCount,
+    likes: LikesCount,
     comments: commentTemplate,
-    commentCount: numberOfComments,
+    commentCount: NumberOfComments,
   };
 
   // возвращает случайное имя картинки аватара пользователя, и путь к ней
