@@ -33,16 +33,16 @@
   // функция вставляет необходимое количество случайных фото в блок
   // photoDescriptions - массив случайных фото
   // quantity - количество фото для отрисовки
-  window.render = function (photoDescriptions, quantity) {
+  window.render = function (photoDescriptions) {
 
     clear();
 
     var fragment = document.createDocumentFragment();
 
-    // цикл пробегает весь массив, при необходимости длину можно уменьшить
-    for (var i = 0; i < quantity; i++) {
-      fragment.appendChild(renderRandomUserImg(photoDescriptions[i]));
-    }
+    // цикл пробегает весь массив
+    photoDescriptions.forEach(function (item) {
+      fragment.appendChild(renderRandomUserImg(item));
+    });
 
     randomUserImgContainer.appendChild(fragment);
   };

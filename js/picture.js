@@ -29,7 +29,7 @@
   // отрисовывает наиболее популярные фото
   // в данном случае отрисовывает в первоначальном порядке
   var sortPopular = function () {
-    window.render(pictures, pictures.length);
+    window.render(pictures);
   };
 
   // сортировка по новым фото
@@ -48,7 +48,7 @@
       }
     }
 
-    window.render(newArrayOfPictures, newArrayOfPictures.length);
+    window.render(newArrayOfPictures);
   };
 
   // сортировка по обсуждаемым фото
@@ -59,9 +59,7 @@
           .sort(function (a, b) {
             return a.comments.length - b.comments.length;
           })
-          .reverse(),
-
-        pictures.length);
+          .reverse());
   };
 
   var onFilterPopularClick = function () {
@@ -81,14 +79,24 @@
 
   var successHandler = function (data) {
     pictures = data;
-    window.render(pictures, pictures.length);
+    console.log(pictures);
+
+    window.render(pictures);
     imgFilters.classList.remove('img-filters--inactive'); // убираем модификатор inactive - начинаем показывать на странице
 
     filterPopular.addEventListener('click', onFilterPopularClick);
     filterNew.addEventListener('click', onFilterNewClick);
     filterDiscussed.addEventListener('click', onFilterDiscussedClick);
 
-    window.preview(pictures);
+
+    document.querySelector('.pictures').addEventListener('click', function (evt) {
+
+      var tempA = evt.target.src.split('.'); // jpg
+      var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
+      var photoNumber = tempB[tempB.length - 1]; // номер фото
+
+      window.preview(evt, pictures[photoNumber - 1]); // номер в массив
+    });
   };
 
   // вызывает функцию вставки, но с моками
@@ -97,6 +105,7 @@
   };
 
   window.load(successHandler, errorHandler);
+
 })();
 
 
