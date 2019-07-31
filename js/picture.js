@@ -79,7 +79,6 @@
 
   var successHandler = function (data) {
     pictures = data;
-    console.log(pictures);
 
     window.render(pictures);
     imgFilters.classList.remove('img-filters--inactive'); // убираем модификатор inactive - начинаем показывать на странице
