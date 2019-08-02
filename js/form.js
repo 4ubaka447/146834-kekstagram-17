@@ -24,4 +24,59 @@
   // меняем уровень эффекта
   effectLevelPin.addEventListener('mousedown', window.effectLevel.changeEffectLevel);
 
+
+  // ////////////////////////////////////////////////////
+
+  var imgUploadForm = document.querySelector('.img-upload__form'); // общая форма
+  var inputHashtag = imgUploadForm.querySelector('.text__hashtags'); // поле ввода хеш-тегов
+  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+
+  // получаем шаблон с сообщением об ошибке
+  var errorTemplate = document.querySelector('#error') // шаблон
+    .content
+    .querySelector('.error'); // содержимое шаблона
+
+  // получаем шаблон с сообщением об успешной отправке
+  var successTemplate = document.querySelector('#success') // шаблон
+    .content
+    .querySelector('.success'); // содержимое шаблона
+
+
+  var showMessage = function (template) {
+    var message = template.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(message);
+    document.querySelector('main').appendChild(fragment);
+  };
+
+  var uploadSuccess = function () {
+    imgUploadOverlay.classList.add('hidden');
+    showMessage(successTemplate);
+  };
+
+  var uploadError = function () {
+    imgUploadOverlay.classList.add('hidden');
+    showMessage(errorTemplate);
+  };
+
+  // функция обработки ввода в поле с хеш-тегами
+  // сбрасывает значение в поле ввода
+  var onInputInput = function () {
+    inputHashtag.setCustomValidity('');
+  };
+
+  var onSubmitButtonClick = function (evt) {
+    if (window.validateHashtags(inputHashtag.value)) {
+
+      window.upload(new FormData(imgUploadForm), uploadSuccess, uploadError);
+      evt.preventDefault();
+
+    } else {
+      evt.preventDefault();
+    }
+  };
+
+  imgUploadForm.addEventListener('submit', onSubmitButtonClick);
+  inputHashtag.addEventListener('input', onInputInput);
+
 })();

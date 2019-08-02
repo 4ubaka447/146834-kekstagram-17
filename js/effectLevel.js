@@ -10,6 +10,7 @@
   var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
   var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
 
+
   // функция изменяет стили для изменения уровня эффекта
   // depthOfEffect глубина эффекта от 0 до 100
   // effectOnImg - наложенный на элемент эффект
@@ -59,7 +60,7 @@
 
         effectLevelPin.style.left = sliderPosition + '%';
         effectLevelDepth.style.width = sliderPosition + '%';
-        effectLevelValue.value = sliderPosition;
+        effectLevelValue.value = Math.round(sliderPosition); // округляем для сервера
 
         changeStyleLevel(sliderPosition, imgUploadPreview.classList.item(1), imgUploadPreview);
       };
