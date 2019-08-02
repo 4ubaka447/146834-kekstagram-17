@@ -88,10 +88,16 @@
     openPost();
   };
 
-  window.preview = function (evt, item) {
-    if (evt.target.classList.contains('picture__img')) {
-      showBigPicture(item);
-    }
+  window.preview = {
+    showBigPicture: function (evt, item) {
+      if (evt.target.classList.contains('picture__img')) {
+        showBigPicture(item);
+      }
+    },
+
+    showMoreComments: function (comments) {
+      getCommentsItem(comments);
+    },
   };
 
 })();
