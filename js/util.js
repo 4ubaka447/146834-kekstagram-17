@@ -5,6 +5,7 @@
   var ESC_KEYCODE = 27;
 
   var textDescription = document.querySelector('.text__description');
+  var textHashtags = document.querySelector('.text__hashtags');
 
   window.util = {
     // возвращает случайный элемент из массива
@@ -18,7 +19,9 @@
     // обрабатывает нажатие Esc
     isEscEvent: function (evt, action) {
       // сработает при нажатии ESC и если фокус не находится в поле ввода комментария
-      if (evt.keyCode === ESC_KEYCODE && textDescription !== document.activeElement) {
+      if (evt.keyCode === ESC_KEYCODE
+        && textDescription !== document.activeElement
+        && textHashtags !== document.activeElement) {
         action();
       }
     },

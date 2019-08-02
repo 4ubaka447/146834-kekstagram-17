@@ -65,7 +65,6 @@
     return true;
   };
 
-
   var onSubmitButtonClick = function () {
     if (inputHashtag.value !== '') {
       validateHashtagsArray(inputHashtag.value);
