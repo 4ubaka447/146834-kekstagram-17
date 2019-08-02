@@ -90,11 +90,13 @@
 
     document.querySelector('.pictures').addEventListener('click', function (evt) {
 
-      var tempA = evt.target.src.split('.'); // jpg
-      var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
-      var photoNumber = tempB[tempB.length - 1]; // номер фото
+      if (evt.target.classList.contains('picture__img')) {
+        var tempA = evt.target.src.split('.'); // jpg
+        var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
+        var photoNumber = tempB[tempB.length - 1]; // номер фото
 
-      window.preview(evt, pictures[photoNumber - 1]); // номер в массив
+        window.preview(evt, pictures[photoNumber - 1]); // номер в массив
+      }
     });
   };
 
