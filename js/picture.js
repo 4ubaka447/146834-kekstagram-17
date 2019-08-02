@@ -77,6 +77,11 @@
     window.debounce(sortDiscussed);
   };
 
+  var bigPicture = document.querySelector('.big-picture'); // блок с "большой" фоторафией
+  var socialComments = bigPicture.querySelector('.social__comments');
+  var socialCommentCount = bigPicture.querySelector('.social__comment-count');
+  var commentsLoader = bigPicture.querySelector('.comments-loader');
+
   var successHandler = function (data) {
     pictures = data;
 
@@ -95,7 +100,20 @@
         var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
         var photoNumber = tempB[tempB.length - 1]; // номер фото
 
-        window.preview(evt, pictures[photoNumber - 1]); // номер в массив
+        window.preview.showBigPicture(evt, pictures[photoNumber - 1]); // номер в массив
+
+        var comments = pictures[photoNumber - 1].comments.slice(5);
+
+        document.querySelector('.comments-loader').addEventListener('click', function () {
+          window.preview.showMoreComments(comments);
+          comments = comments.slice(5);
+
+          socialCommentCount.textContent = socialComments.childNodes.length + ' из ' + pictures[photoNumber - 1].comments.length + ' комментариев';
+
+          if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
+            commentsLoader.classList.add('visually-hidden');
+          }
+        });
       }
     });
   };
