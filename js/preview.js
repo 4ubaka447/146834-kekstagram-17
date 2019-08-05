@@ -89,10 +89,8 @@
   };
 
   window.preview = {
-    showBigPicture: function (evt, item) {
-      if (evt.target.classList.contains('picture__img')) {
-        showBigPicture(item);
-      }
+    showBigPicture: function (item) {
+      showBigPicture(item);
     },
 
     showMoreComments: function (comments) {

@@ -82,26 +82,33 @@
   var commentsLoader = bigPicture.querySelector('.comments-loader');
 
   var onPicturesClick = function (evt) {
+    var tempA;
+
     if (evt.target.classList.contains('picture__img')) {
-      var tempA = evt.target.src.split('.'); // jpg
-      var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
-      var photoNumber = tempB[tempB.length - 1]; // номер фото
-
-      window.preview.showBigPicture(evt, pictures[photoNumber - 1]); // номер в массив
-
-      var comments = pictures[photoNumber - 1].comments.slice(5);
-
-      document.querySelector('.comments-loader').addEventListener('click', function () {
-        window.preview.showMoreComments(comments);
-        comments = comments.slice(5);
-
-        socialCommentCount.textContent = socialComments.childNodes.length + ' из ' + pictures[photoNumber - 1].comments.length + ' комментариев';
-
-        if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
-          commentsLoader.classList.add('visually-hidden');
-        }
-      });
+      tempA = evt.target.src.split('.'); // jpg
     }
+
+    if (evt.target.classList.contains('picture')) {
+      tempA = evt.target.firstElementChild.src.split('.'); // jpg
+    }
+
+    var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
+    var photoNumber = tempB[tempB.length - 1]; // номер фото
+
+    window.preview.showBigPicture(pictures[photoNumber - 1]); // номер в массив
+
+    var comments = pictures[photoNumber - 1].comments.slice(5);
+
+    document.querySelector('.comments-loader').addEventListener('click', function () {
+      window.preview.showMoreComments(comments);
+      comments = comments.slice(5);
+
+      socialCommentCount.textContent = socialComments.childNodes.length + ' из ' + pictures[photoNumber - 1].comments.length + ' комментариев';
+
+      if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
+        commentsLoader.classList.add('visually-hidden');
+      }
+    });
   };
 
   var onPicturesPressEnter = function (evt) {
