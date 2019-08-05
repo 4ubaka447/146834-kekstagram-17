@@ -3,11 +3,10 @@
 (function () {
 
   var NEW_ELEMENTS_COUNT = 10;
-
-  var stub = window.data.photoDescription; // получаем заглушку из мок, на случай ошибки
+  var ENTER_KEYCODE = 13;
 
   var imgFilters = document.querySelector('.img-filters'); // получаем доступ к блоку фильтров случайных фото
-  var imgFiltersButton = imgFilters.querySelectorAll('.img-filters__button'); // получаем псевдомассив кнопок фильтра
+  var imgFiltersButtons = imgFilters.querySelectorAll('.img-filters__button'); // получаем псевдомассив кнопок фильтра
 
   // кнопки фильтра
   var filterPopular = imgFilters.querySelector('#filter-popular');
@@ -18,7 +17,7 @@
 
   // функция подсвечивает кнопку
   var activeFiltersButton = function (elem) {
-    imgFiltersButton.forEach(function (it) {
+    imgFiltersButtons.forEach(function (it) {
       it.classList.remove('img-filters__button--active');
     });
 
@@ -54,12 +53,12 @@
   // сортировка по обсуждаемым фото
   var sortDiscussed = function () {
     window.render(
-        pictures
-          .slice()
-          .sort(function (a, b) {
-            return a.comments.length - b.comments.length;
-          })
-          .reverse());
+      pictures
+        .slice()
+        .sort(function (a, b) {
+          return a.comments.length - b.comments.length;
+        })
+        .reverse());
   };
 
   var onFilterPopularClick = function () {
@@ -82,6 +81,35 @@
   var socialCommentCount = bigPicture.querySelector('.social__comment-count');
   var commentsLoader = bigPicture.querySelector('.comments-loader');
 
+  var onPicturesClick = function (evt) {
+    if (evt.target.classList.contains('picture__img')) {
+      var tempA = evt.target.src.split('.'); // jpg
+      var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
+      var photoNumber = tempB[tempB.length - 1]; // номер фото
+
+      window.preview.showBigPicture(evt, pictures[photoNumber - 1]); // номер в массив
+
+      var comments = pictures[photoNumber - 1].comments.slice(5);
+
+      document.querySelector('.comments-loader').addEventListener('click', function () {
+        window.preview.showMoreComments(comments);
+        comments = comments.slice(5);
+
+        socialCommentCount.textContent = socialComments.childNodes.length + ' из ' + pictures[photoNumber - 1].comments.length + ' комментариев';
+
+        if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
+          commentsLoader.classList.add('visually-hidden');
+        }
+      });
+    }
+  };
+
+  var onPicturesPressEnter = function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      onPicturesClick(evt); // не работает, собстие происходит на внешней ссылке, как его перекинуть вовнутрь на картинку, как при клике, я не знаю
+    }
+  };
+
   var successHandler = function (data) {
     pictures = data;
 
@@ -93,34 +121,15 @@
     filterDiscussed.addEventListener('click', onFilterDiscussedClick);
 
 
-    document.querySelector('.pictures').addEventListener('click', function (evt) {
-
-      if (evt.target.classList.contains('picture__img')) {
-        var tempA = evt.target.src.split('.'); // jpg
-        var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
-        var photoNumber = tempB[tempB.length - 1]; // номер фото
-
-        window.preview.showBigPicture(evt, pictures[photoNumber - 1]); // номер в массив
-
-        var comments = pictures[photoNumber - 1].comments.slice(5);
-
-        document.querySelector('.comments-loader').addEventListener('click', function () {
-          window.preview.showMoreComments(comments);
-          comments = comments.slice(5);
-
-          socialCommentCount.textContent = socialComments.childNodes.length + ' из ' + pictures[photoNumber - 1].comments.length + ' комментариев';
-
-          if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
-            commentsLoader.classList.add('visually-hidden');
-          }
-        });
-      }
-    });
+    document.querySelector('.pictures').addEventListener('click', onPicturesClick);
+    document.querySelector('.pictures').addEventListener('keydown', onPicturesPressEnter);
   };
 
-  // вызывает функцию вставки, но с моками
+  // заглушка
   var errorHandler = function () {
-    successHandler(stub);
+    var div = document.createElement('div');
+    div.textContent = 'Ошибка загрузки!';
+    document.querySelector('main').appendChild(div);
   };
 
   window.load(successHandler, errorHandler);

@@ -61,17 +61,24 @@
 
   // функция обработки ввода в поле с хеш-тегами
   // сбрасывает значение в поле ввода
+
+  var countSymbols = function (string) {
+    var a = string.slice('\/u');
+    return a;
+  };
+
   var onInputInput = function () {
-    inputHashtag.setCustomValidity('');
+    console.log(countSymbols(inputHashtag.value));
+    if (window.validateHashtags(inputHashtag.value)) {
+      inputHashtag.setCustomValidity('');
+    }
   };
 
   var onSubmitButtonClick = function (evt) {
+    evt.preventDefault();
     if (window.validateHashtags(inputHashtag.value)) {
 
       window.upload(new FormData(imgUploadForm), uploadSuccess, uploadError);
-      evt.preventDefault();
-
-    } else {
       evt.preventDefault();
     }
   };
