@@ -13,6 +13,8 @@
   var filterNew = imgFilters.querySelector('#filter-new');
   var filterDiscussed = imgFilters.querySelector('#filter-discussed');
 
+  var picturesContainer = document.querySelector('.pictures');
+
   var pictures = [];
 
   // функция подсвечивает кнопку
@@ -53,12 +55,12 @@
   // сортировка по обсуждаемым фото
   var sortDiscussed = function () {
     window.render(
-      pictures
-        .slice()
-        .sort(function (a, b) {
-          return a.comments.length - b.comments.length;
-        })
-        .reverse());
+        pictures
+          .slice()
+          .sort(function (a, b) {
+            return a.comments.length - b.comments.length;
+          })
+          .reverse());
   };
 
   var onFilterPopularClick = function () {
@@ -78,7 +80,7 @@
 
   var bigPicture = document.querySelector('.big-picture'); // блок с "большой" фоторафией
   var socialComments = bigPicture.querySelector('.social__comments');
-  var socialCommentCount = bigPicture.querySelector('.social__comment-count');
+  var commentsCountLoaded = bigPicture.querySelector('.comments-count__loaded');
   var commentsLoader = bigPicture.querySelector('.comments-loader');
 
   var drawBigPhoto = function (src) {
@@ -91,11 +93,11 @@
 
     var comments = pictures[photoNumber - 1].comments.slice(5);
 
-    document.querySelector('.comments-loader').addEventListener('click', function () {
+    commentsLoader.addEventListener('click', function () {
       window.preview.showMoreComments(comments);
       comments = comments.slice(5);
 
-      socialCommentCount.textContent = socialComments.childNodes.length + ' из ' + pictures[photoNumber - 1].comments.length + ' комментариев';
+      commentsCountLoaded.textContent = socialComments.childNodes.length;
 
       if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
         commentsLoader.classList.add('visually-hidden');
@@ -131,18 +133,23 @@
     filterDiscussed.addEventListener('click', onFilterDiscussedClick);
 
 
-    document.querySelector('.pictures').addEventListener('click', onPicturesClick);
-    document.querySelector('.pictures').addEventListener('keydown', onPicturesPressEnter);
+    picturesContainer.addEventListener('click', onPicturesClick);
+    picturesContainer.addEventListener('keydown', onPicturesPressEnter);
   };
 
   // заглушка
   var errorHandler = function () {
     var div = document.createElement('div');
     div.textContent = 'Ошибка загрузки!';
+    div.style.fontSize = '100px';
+    div.style.color = 'red';
+    div.style.position = 'absolute';
+    div.style.top = '50%';
+    div.style.left = '25%';
     document.querySelector('main').appendChild(div);
   };
 
-  window.load(successHandler, errorHandler);
+  window.network.load(successHandler, errorHandler);
 
 })();
 

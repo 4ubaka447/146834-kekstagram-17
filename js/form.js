@@ -6,6 +6,7 @@
   var uploadFile = imgUpload.querySelector('#upload-file');
   var uploadCancel = imgUpload.querySelector('#upload-cancel');
   var scale = imgUpload.querySelector('.scale');
+  var effectLevel = imgUpload.querySelector('.effect-level');
   var effectsList = imgUpload.querySelector('.effects__list');
   var effectLevelPin = imgUpload.querySelector('.effect-level__pin');
 
@@ -42,7 +43,8 @@
   effectsList.addEventListener('click', window.changeEffects.onEffectsItemClick);
 
   // меняем уровень эффекта
-  effectLevelPin.addEventListener('mousedown', window.effectLevel.changeEffectLevel);
+  effectLevelPin.addEventListener('mousedown', window.effectLevel.move);
+  effectLevel.addEventListener('click', window.effectLevel.click);
 
 
   // ////////////////////////////////////////////////////
@@ -89,7 +91,7 @@
     evt.preventDefault();
     if (window.validateHashtags(inputHashtag.value)) {
 
-      window.upload(new FormData(imgUploadForm), uploadSuccess, uploadError);
+      window.network.upload(new FormData(imgUploadForm), uploadSuccess, uploadError);
       evt.preventDefault();
     }
   };

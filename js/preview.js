@@ -15,8 +15,10 @@
   var socialComments = bigPicture.querySelector('.social__comments');
   var socialCaption = bigPicture.querySelector('.social__caption');
 
-  var socialCommentCount = bigPicture.querySelector('.social__comment-count');
+  var commentsCountLoaded = bigPicture.querySelector('.comments-count__loaded');
   var commentsLoader = bigPicture.querySelector('.comments-loader');
+
+  var body = document.querySelector('body');
 
   // функция очистки списка комментариев
   var clearCommentList = function () {
@@ -58,7 +60,7 @@
     bigPicture.classList.add('hidden');
     bigPictureCancel.removeEventListener('click', closePost);
     document.removeEventListener('keydown', onKeydownEsc);
-    document.body.classList.remove('modal-open');
+    body.classList.remove('modal-open');
   };
 
   var openPost = function () {
@@ -68,18 +70,18 @@
 
   var showBigPicture = function (item) {
 
-    document.querySelector('body').classList.add('modal-open');
+    body.classList.add('modal-open');
     bigPicture.classList.remove('hidden');
-    socialCommentCount.classList.remove('visually-hidden');
     commentsLoader.classList.remove('visually-hidden');
 
     bigPictureImg.src = item.url;
     likesCount.textContent = item.likes;
+    commentsCountLoaded.textContent = COMMENT_TOTAL;
     commentsCount.textContent = item.comments.length;
     socialCaption.textContent = item.description;
 
     if (item.comments.length < COMMENT_TOTAL) {
-      socialCommentCount.classList.add('visually-hidden');
+      commentsCountLoaded.textContent = item.comments.length;
       commentsLoader.classList.add('visually-hidden');
     }
 

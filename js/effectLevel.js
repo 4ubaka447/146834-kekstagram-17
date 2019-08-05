@@ -36,14 +36,31 @@
     }
   };
 
+  var drawSliderPosition = function (sliderPosition) {
+    effectLevelPin.style.left = sliderPosition + '%';
+    effectLevelDepth.style.width = sliderPosition + '%';
+    effectLevelValue.value = Math.round(sliderPosition); // округляем для сервера
+    changeStyleLevel(sliderPosition, imgUploadPreview.classList.item(1), imgUploadPreview);
+  };
+
   window.effectLevel = {
-    changeEffectLevel: function (evt) {
+    move: function (evt) {
       // все перемещения слайдера будем считать в процентах,
       // для этого найдем масштбаный коэффициент
       // получим ширину слайдера и соотнесем ее к 100%
       var scaleFactor = effectLevelLine.offsetWidth / 100; // получаем ширину
       var startX = evt.clientX;
+      var maxMoveX = effectLevelLine.getBoundingClientRect().right;
+      var minMoveX = effectLevelLine.getBoundingClientRect().left;
       var onMouseMove = function (moveEvt) {
+
+        if (moveEvt.clientX > maxMoveX) {
+          startX = maxMoveX;
+        }
+
+        if (moveEvt.clientX < minMoveX) {
+          startX = minMoveX;
+        }
 
         var shift = (startX - moveEvt.clientX);
         startX = moveEvt.clientX;
@@ -58,11 +75,7 @@
           sliderPosition = 100;
         }
 
-        effectLevelPin.style.left = sliderPosition + '%';
-        effectLevelDepth.style.width = sliderPosition + '%';
-        effectLevelValue.value = Math.round(sliderPosition); // округляем для сервера
-
-        changeStyleLevel(sliderPosition, imgUploadPreview.classList.item(1), imgUploadPreview);
+        drawSliderPosition(sliderPosition);
       };
 
       var onMouseUp = function () {
@@ -72,6 +85,18 @@
 
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
+    },
+
+    click: function (evt) {
+      var scaleFactor = effectLevelLine.offsetWidth / 100;
+      var sliderPosition;
+      var maxX = effectLevelLine.getBoundingClientRect().right;
+      var minX = effectLevelLine.getBoundingClientRect().left;
+
+      if (evt.clientX < maxX && evt.clientX > minX) {
+        sliderPosition = (evt.clientX - minX) / scaleFactor;
+        drawSliderPosition(sliderPosition);
+      }
     },
   };
 })();
