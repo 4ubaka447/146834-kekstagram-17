@@ -81,17 +81,9 @@
   var socialCommentCount = bigPicture.querySelector('.social__comment-count');
   var commentsLoader = bigPicture.querySelector('.comments-loader');
 
-  var onPicturesClick = function (evt) {
-    var tempA;
+  var drawBigPhoto = function (src) {
 
-    if (evt.target.classList.contains('picture__img')) {
-      tempA = evt.target.src.split('.'); // jpg
-    }
-
-    if (evt.target.classList.contains('picture')) {
-      tempA = evt.target.firstElementChild.src.split('.'); // jpg
-    }
-
+    var tempA = src.split('.'); // jpg
     var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
     var photoNumber = tempB[tempB.length - 1]; // номер фото
 
@@ -111,9 +103,20 @@
     });
   };
 
+  var onPicturesClick = function (evt) {
+
+    if (evt.target.classList.contains('picture__img')) {
+      drawBigPhoto(evt.target.src);
+    }
+
+    if (evt.target.classList.contains('picture')) {
+      drawBigPhoto(evt.target.firstElementChild.src);
+    }
+  };
+
   var onPicturesPressEnter = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      onPicturesClick(evt); // не работает, собстие происходит на внешней ссылке, как его перекинуть вовнутрь на картинку, как при клике, я не знаю
+      onPicturesClick(evt);
     }
   };
 

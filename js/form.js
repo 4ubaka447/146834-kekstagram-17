@@ -9,8 +9,28 @@
   var effectsList = imgUpload.querySelector('.effects__list');
   var effectLevelPin = imgUpload.querySelector('.effect-level__pin');
 
+  var imgUploadPreview = document.querySelector('.img-upload__preview');
+  var imgPreview = imgUploadPreview.querySelector('img');
+
+  var preview = function (file) {
+    if (file.type.match(/image.*/)) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function (evt) {
+        imgPreview.src = evt.target.result;
+        imgPreview.style.width = '100%';
+        imgPreview.style.height = '100%';
+        imgPreview.style.objectFit = 'cover';
+      });
+      reader.readAsDataURL(file);
+    }
+  };
+
   // открываем попап
-  uploadFile.addEventListener('change', window.popup.openPopup);
+  uploadFile.addEventListener('change', function (evt) {
+    window.popup.openPopup();
+    preview(evt.target.files[0]);
+  });
 
   // закрываем попап
   uploadCancel.addEventListener('click', window.popup.closePopup);
@@ -59,16 +79,7 @@
     showMessage(errorTemplate);
   };
 
-  // функция обработки ввода в поле с хеш-тегами
-  // сбрасывает значение в поле ввода
-
-  var countSymbols = function (string) {
-    var a = string.slice('\/u');
-    return a;
-  };
-
   var onInputInput = function () {
-    console.log(countSymbols(inputHashtag.value));
     if (window.validateHashtags(inputHashtag.value)) {
       inputHashtag.setCustomValidity('');
     }
