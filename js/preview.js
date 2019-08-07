@@ -61,6 +61,8 @@
     bigPictureCancel.removeEventListener('click', closePost);
     document.removeEventListener('keydown', onKeydownEsc);
     body.classList.remove('modal-open');
+
+    commentsLoader.removeEventListener('click', commentsLoader.fn);
   };
 
   var openPost = function () {
@@ -90,14 +92,26 @@
     openPost();
   };
 
-  window.preview = {
-    showBigPicture: function (item) {
-      showBigPicture(item);
-    },
+  window.showBigPhoto = function (src, pictures) {
 
-    showMoreComments: function (comments) {
+    var tempA = src.split('.'); // jpg
+    var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
+    var photoNumber = tempB[tempB.length - 1]; // номер фото
+
+    showBigPicture(pictures[photoNumber - 1]); // номер в массив
+
+    var comments = pictures[photoNumber - 1].comments.slice(5);
+
+    commentsLoader.addEventListener('click', commentsLoader.fn = function () {
       getCommentsItem(comments);
-    },
+      comments = comments.slice(5);
+
+      commentsCountLoaded.textContent = socialComments.childNodes.length;
+
+      if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
+        commentsLoader.classList.add('visually-hidden');
+      }
+    });
   };
 
 })();

@@ -6,6 +6,8 @@
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var imgUploadPreview = document.querySelector('.img-upload__preview');
 
+  var inputHashtag = document.querySelector('.text__hashtags'); // поле ввода хеш-тегов
+
   var effectsList = document.querySelector('.effects__list');
 
   var onPopupEscPress = function (evt) {
@@ -16,6 +18,7 @@
 
     closePopup: function () {
       imgUploadForm.reset(); // сбрасываем форму при закрытиии
+      window.scale.reset();
 
       imgUploadOverlay.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
@@ -23,6 +26,8 @@
 
       imgUploadPreview.classList = 'img-upload__preview effects__preview--none';
       effectsList.click();
+
+      inputHashtag.setCustomValidity('');
     },
 
     openPopup: function () {

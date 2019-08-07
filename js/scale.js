@@ -49,7 +49,6 @@
       if (target === scaleControlSmaller) {
         Scale.VALUE_DEFAULT =
           scaleDown(Scale.VALUE_DEFAULT, Scale.STEP, Scale.LIMIT_VALUES);
-
       }
 
       if (target === scaleControlBigger) {
@@ -57,6 +56,11 @@
           scaleUp(Scale.VALUE_DEFAULT, Scale.STEP, Scale.LIMIT_VALUES);
       }
 
+      setScaleControlValue(Scale.VALUE_DEFAULT);
+    },
+
+    reset: function () {
+      Scale.VALUE_DEFAULT = 1;
       setScaleControlValue(Scale.VALUE_DEFAULT);
     },
   };

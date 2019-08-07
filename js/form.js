@@ -109,7 +109,8 @@
 
 
   var uploadSuccess = function () {
-    imgUploadOverlay.classList.add('hidden');
+    window.popup.closePopup();
+
     showMessage(successTemplate);
     document.addEventListener('keydown', onSuccessEscPress);
     document.addEventListener('click', onSuccessClick);
@@ -131,9 +132,7 @@
   var onSubmitButtonClick = function (evt) {
     evt.preventDefault();
     if (window.validateHashtags(inputHashtag.value)) {
-
       window.network.upload(new FormData(imgUploadForm), uploadSuccess, uploadError);
-      evt.preventDefault();
     }
   };
 

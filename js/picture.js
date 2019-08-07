@@ -78,41 +78,14 @@
     window.debounce(sortDiscussed);
   };
 
-  var bigPicture = document.querySelector('.big-picture'); // блок с "большой" фоторафией
-  var socialComments = bigPicture.querySelector('.social__comments');
-  var commentsCountLoaded = bigPicture.querySelector('.comments-count__loaded');
-  var commentsLoader = bigPicture.querySelector('.comments-loader');
-
-  var drawBigPhoto = function (src) {
-
-    var tempA = src.split('.'); // jpg
-    var tempB = tempA[0].split('/'); // разбиваем на массив, в последней ячейке которого лежит номер фото
-    var photoNumber = tempB[tempB.length - 1]; // номер фото
-
-    window.preview.showBigPicture(pictures[photoNumber - 1]); // номер в массив
-
-    var comments = pictures[photoNumber - 1].comments.slice(5);
-
-    commentsLoader.addEventListener('click', function () {
-      window.preview.showMoreComments(comments);
-      comments = comments.slice(5);
-
-      commentsCountLoaded.textContent = socialComments.childNodes.length;
-
-      if (socialComments.childNodes.length === pictures[photoNumber - 1].comments.length) {
-        commentsLoader.classList.add('visually-hidden');
-      }
-    });
-  };
-
   var onPicturesClick = function (evt) {
 
     if (evt.target.classList.contains('picture__img')) {
-      drawBigPhoto(evt.target.src);
+      window.showBigPhoto(evt.target.src, pictures);
     }
 
     if (evt.target.classList.contains('picture')) {
-      drawBigPhoto(evt.target.firstElementChild.src);
+      window.showBigPhoto(evt.target.firstElementChild.src, pictures);
     }
   };
 
